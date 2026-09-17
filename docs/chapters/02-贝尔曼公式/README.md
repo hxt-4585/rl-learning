@@ -43,6 +43,7 @@ v_4=r_4+\gamma( r_1+\gamma r_2+...)=r_4 + \gamma v_1 \\
 $$
 
 把它写成矩阵的形式
+
 $$
 \underbrace{
 \begin{bmatrix}
@@ -81,10 +82,12 @@ v_4
 }_{\mathbf v}
 $$
 最终可以写为
+
 $$
 \mathbf{v}=\mathbf{r}+\gamma\mathbf{P}\mathbf{v}
 $$
 这就是**贝尔曼方程**，其中 $\mathbf{P}$ 是状态转移矩阵，它描述的是在给定策略后，从当前状态转移至下一个状态的概率。由贝尔曼方程移项并提取 $\mathbf{v}$，可以求解得到：
+
 $$
 \boxed{
 \mathbf v=(\mathbf I-\gamma\mathbf P)^{-1}\mathbf r
@@ -99,6 +102,7 @@ $$
 ![练习示例](assets/003.png)
 
 **Answer**
+
 $$
 v_1=0 + \gamma v_3 \\
 v_2=1 + \gamma v_4 \\
@@ -110,6 +114,7 @@ $$
 ## 2.2 State Value
 
 考虑一个单步过程：
+
 $$
 S_t \xrightarrow{A_t} R_{t+1},\, S_{t+1}
 $$
