@@ -1,0 +1,14 @@
+.markdown-section img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 1.25rem auto;
+}
+
+.markdown-section .katex-display {
+  margin: 1.25rem auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
