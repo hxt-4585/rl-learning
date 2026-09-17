@@ -1,8 +1,8 @@
 # 第 2 课：贝尔曼公式
 
-## 2.1 Motivation Examples
+## 2.1 Motivation examples
 
-### 2.1.1 return 为什么重要?
+### 2.1.1 Return 为什么重要?
 
 **return 能够告诉我们哪个策略好哪个策略坏**
 
@@ -112,7 +112,7 @@ v_4=1 + \gamma v_4 \\
 $$
 
 
-## 2.2 State Value
+## 2.2 State value
 
 ### 2.2.1 单步过程
 
@@ -170,7 +170,7 @@ $$
 
 
 
-### 2.2.3 State Value
+### 2.2.3 State value
 
 回报 $G_t$ 的期望（也称为期望值或均值）被定义为**状态价值函数**（state-value function），简称**状态价值**：
 
@@ -501,5 +501,378 @@ v_\pi(s_1) &= \frac{\gamma}{1-\gamma}.
 \end{aligned}
 $$
 
-
 ## 2.4 Bellman equation: Matrix-vector form
+
+### 2.4.1 推导
+
+为什么要使用矩阵—向量形式？
+
+- 如何求解贝尔曼方程？
+
+  一个未知的状态价值依赖于其他未知的状态价值：
+
+$$
+v_\pi(s)
+{}=
+\sum_a \pi(a\mid s)
+\left[
+\sum_r p(r\mid s,a)\,r
++
+\gamma\sum_{s'}p(s'\mid s,a)\,v_\pi(s')
+\right].
+$$
+
+- 上述逐元素形式对每一个状态 $s\in\mathcal{S}$ 都成立。这意味着，状态空间中有多少个状态，就会有 $|\mathcal{S}|$ 个这样的方程。
+
+- 将所有方程放在一起，就得到一个线性方程组；它可以简洁地写成矩阵—向量形式（matrix-vector form）。
+
+- 矩阵—向量形式既优雅又重要。
+
+
+
+回顾一下：
+
+$$
+v_\pi(s)
+{}=
+\sum_a \pi(a\mid s)
+\left[
+\sum_r p(r\mid s,a)\,r
++
+\gamma\sum_{s'}p(s'\mid s,a)\,v_\pi(s')
+\right].
+$$
+
+将贝尔曼期望方程改写为：
+
+$$
+v_\pi(s)
+{}=
+r_\pi(s)
++
+\gamma\sum_{s'}p_\pi(s'\mid s)\,v_\pi(s').
+$$
+
+其中：
+
+$$
+r_\pi(s)
+\triangleq
+\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)\,r,
+\qquad
+p_\pi(s'\mid s)
+\triangleq
+\sum_a\pi(a\mid s)p(s'\mid s,a).
+$$
+
+<span style="color: blue;">对于 $p_\pi(s'\mid s)$，可能有同学会疑惑，为什么后半部分可以改变求和顺序，原来的未来价值项为：</span>
+
+$$
+\gamma
+\sum_a \pi(a\mid s)
+\sum_{s'}p(s'\mid s,a)v_\pi(s').
+$$
+
+<span style="color: blue;">转变成了</span>
+
+$$
+\gamma
+\sum_{s'}\sum_a \pi(a\mid s)
+p(s'\mid s,a)v_\pi(s').
+$$
+
+<span style="color: blue;">实际上结构是从</span>
+
+$$
+\sum_x A_x\left(\sum_y B_{x,y}\right)
+$$
+
+<span style="color: blue;">变成：</span>
+
+$$
+\sum_x A_x\left(\sum_y B_{x,y}\right)
+{}=
+\sum_x\left(\sum_y A_xB_{x,y}\right)
+{}=
+\boxed{
+\sum_x\sum_y A_xB_{x,y}
+}
+$$
+
+
+假设状态可以编号为 $s_i$，其中 $i=1,\ldots,n$。
+
+对于状态 $s_i$，贝尔曼期望方程为：
+
+$$
+v_\pi(s_i)
+{}=
+r_\pi(s_i)
++
+\gamma\sum_{s_j}p_\pi(s_j\mid s_i)v_\pi(s_j).
+$$
+
+将所有状态对应的方程组合起来，可以改写为矩阵—向量形式：
+
+$$
+\mathbf{v}_\pi
+{}=
+\mathbf{r}_\pi
++
+\gamma\mathbf{P}_\pi\mathbf{v}_\pi.
+$$
+
+其中：
+
+- $\mathbf{v}_\pi=[v_\pi(s_1),\ldots,v_\pi(s_n)]^T\in\mathbb{R}^n$ 是状态价值向量。
+
+- $\mathbf{r}_\pi=[r_\pi(s_1),\ldots,r_\pi(s_n)]^T\in\mathbb{R}^n$ 是期望即时奖励向量。
+
+- $\mathbf{P}_\pi\in\mathbb{R}^{n\times n}$，且 $[\mathbf{P}_\pi]_{ij}=p_\pi(s_j\mid s_i)$，称为策略 $\pi$ 下的状态转移矩阵。
+
+如果有四个状态，$\mathbf{v}_\pi=\mathbf{r}_\pi+\gamma\mathbf{P}_\pi\mathbf{v}_\pi$ 可以展开写为：
+
+$$
+\underbrace{
+\begin{bmatrix}
+v_\pi(s_1) \\
+v_\pi(s_2) \\
+v_\pi(s_3) \\
+v_\pi(s_4)
+\end{bmatrix}
+}_{\mathbf{v}_\pi}
+{}=
+\underbrace{
+\begin{bmatrix}
+r_\pi(s_1) \\
+r_\pi(s_2) \\
+r_\pi(s_3) \\
+r_\pi(s_4)
+\end{bmatrix}
+}_{\mathbf{r}_\pi}
++
+\gamma
+\underbrace{
+\begin{bmatrix}
+p_\pi(s_1\mid s_1) & p_\pi(s_2\mid s_1) & p_\pi(s_3\mid s_1) & p_\pi(s_4\mid s_1) \\
+p_\pi(s_1\mid s_2) & p_\pi(s_2\mid s_2) & p_\pi(s_3\mid s_2) & p_\pi(s_4\mid s_2) \\
+p_\pi(s_1\mid s_3) & p_\pi(s_2\mid s_3) & p_\pi(s_3\mid s_3) & p_\pi(s_4\mid s_3) \\
+p_\pi(s_1\mid s_4) & p_\pi(s_2\mid s_4) & p_\pi(s_3\mid s_4) & p_\pi(s_4\mid s_4)
+\end{bmatrix}
+}_{\mathbf{P}_\pi}
+\underbrace{
+\begin{bmatrix}
+v_\pi(s_1) \\
+v_\pi(s_2) \\
+v_\pi(s_3) \\
+v_\pi(s_4)
+\end{bmatrix}
+}_{\mathbf{v}_\pi}.
+$$
+
+### 2.4.2 Example
+
+![image-20260917233111126](assets/010.png)
+
+$$
+\begin{bmatrix}
+v_\pi(s_1) \\
+v_\pi(s_2) \\
+v_\pi(s_3) \\
+v_\pi(s_4)
+\end{bmatrix}
+{}=
+\begin{bmatrix}
+0.5(0)+0.5(-1) \\
+1 \\
+1 \\
+1
+\end{bmatrix}
++
+\gamma
+\begin{bmatrix}
+0 & 0.5 & 0.5 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+v_\pi(s_1) \\
+v_\pi(s_2) \\
+v_\pi(s_3) \\
+v_\pi(s_4)
+\end{bmatrix}.
+$$
+
+
+
+
+## 2.5 Bellman equation: Solve the state values
+
+**为什么要求解状态价值？**
+
+- 给定一个策略（policy），求出该策略对应的状态价值，这个过程称为**策略评估（policy evaluation）**。它是强化学习中的一个基础问题，也是进一步寻找更优策略的基础。
+- 理解如何求解**贝尔曼方程（Bellman equation）**非常重要。
+
+
+
+贝尔曼方程的矩阵—向量形式为：
+
+$$
+\mathbf{v}_\pi
+{}=
+\mathbf{r}_\pi
++
+\gamma\mathbf{P}_\pi\mathbf{v}_\pi.
+$$
+
+- 其闭式解（closed-form solution）为：
+
+$$
+\mathbf{v}_\pi
+{}=
+(\mathbf{I}-\gamma\mathbf{P}_\pi)^{-1}\mathbf{r}_\pi.
+$$
+
+在实际计算中，通常仍需要借助数值工具求矩阵的逆。
+
+能否避免矩阵求逆？可以，使用迭代算法即可。
+
+- 一种迭代解法为：
+
+$$
+\mathbf{v}_{k+1}
+{}=
+\mathbf{r}_\pi
++
+\gamma\mathbf{P}_\pi\mathbf{v}_k.
+$$
+
+该算法会产生一个序列 $\{\mathbf{v}_0,\mathbf{v}_1,\mathbf{v}_2,\ldots\}$。可以证明，当 $k\to\infty$ 时：
+
+$$
+\mathbf{v}_k
+\to
+\mathbf{v}_\pi
+{}=
+(\mathbf{I}-\gamma\mathbf{P}_\pi)^{-1}\mathbf{r}_\pi.
+$$
+
+可以任意初始化一个状态价值向量 $\mathbf{v}_0$，例如全零向量或随机向量。随后重复执行。
+
+证明大家就直接看一下
+
+![image-20260917232435844](assets/009.png)
+
+## 2.6 Action value
+
+### 2.6.1 推导
+
+**从状态价值到动作价值**
+
+状态价值 $v_\pi(s)$ 回答的是：
+
+> 当智能体处于状态 $s$，并按照策略 $\pi$ 行动时，未来平均能获得多少回报？
+
+$$
+v_\pi(s)
+{}=
+\mathbb{E}_\pi[G_t\mid S_t=s].
+$$
+
+但有时我们不仅想知道“这个状态值不值得待”，还想知道“在这个状态下，第一步应该选哪个动作”。
+
+这时需要使用**动作价值** $q_\pi(s,a)$。它表示：智能体处于状态 $s$ 时，先执行动作 $a$，之后再按照策略 $\pi$ 行动，未来平均能够获得多少回报。
+
+$$
+q_\pi(s,a)
+{}=
+\mathbb{E}_\pi[G_t\mid S_t=s,A_t=a].
+$$
+
+两者的区别可以简单理解为：
+
+- 状态价值 $v_\pi(s)$：评价“处于状态 $s$ 有多好”。
+- 动作价值 $q_\pi(s,a)$：评价“在状态 $s$ 下执行动作 $a$ 有多好”。
+
+动作价值尤其重要，因为它可以直接用来比较同一状态下的不同动作。例如，若：
+
+$$
+q_\pi(s,a_1)>q_\pi(s,a_2),
+$$
+
+则从长期回报的角度看，在状态 $s$ 下优先选择动作 $a_1$ 更好。
+
+
+
+回顾状态价值函数：
+
+$$
+v_\pi(s)
+{}=
+\sum_a\pi(a\mid s)
+\underbrace{
+\left[
+\sum_r p(r\mid s,a)\,r
++
+\gamma\sum_{s'}p(s'\mid s,a)v_\pi(s')
+\right]
+}_{q_\pi(s,a)}
+$$
+
+由此可得，动作价值函数为：
+
+$$
+q_\pi(s,a)
+{}=
+\sum_r p(r\mid s,a)\,r
++
+\gamma\sum_{s'}p(s'\mid s,a)v_\pi(s')
+$$
+
+当然之前根据自己理解推导的也是正确的
+
+$$
+q_\pi(s,a)
+{}=
+\sum_{s'}
+p(s'\mid s,a)
+\left[
+r(s,a,s')
++
+\gamma v_\pi(s')
+\right]
+$$
+
+状态价值和动作价值是同一过程的两个视角：
+
+- 状态价值函数说明：在状态 $s$ 下，按照策略 $\pi$ 选择动作后，能够获得的平均回报。
+
+- 动作价值函数说明：在状态 $s$ 下先执行动作 $a$，之后再按照策略 $\pi$ 行动，能够获得的平均回报。
+
+因此：
+
+- 已知所有动作价值 $q_\pi(s,a)$，可以根据策略 $\pi(a\mid s)$ 对它们加权平均，得到状态价值 $v_\pi(s)$
+
+- 已知下一状态的状态价值 $v_\pi(s')$，可以计算当前动作的动作价值 $q_\pi(s,a)$
+
+
+
+### 2.6.2 Example
+
+![](assets/008.png)
+
+$$
+q_\pi(s_1,a_2) = -1+\gamma v_\pi(s_2)
+$$
+
+<span style="color: red;">需要注意的是虽然这个策略告诉我们具体执行 $a_2$，但是实际上所有的动作价值都可以计算</span>
+
+$$
+\begin{aligned}
+q_\pi(s_1,a_1) &= -1+\gamma v_\pi(s_1), \\
+q_\pi(s_1,a_3) &= 0+\gamma v_\pi(s_3), \\
+q_\pi(s_1,a_4) &= -1+\gamma v_\pi(s_1), \\
+q_\pi(s_1,a_5) &= 0+\gamma v_\pi(s_1).
+\end{aligned}
+$$
