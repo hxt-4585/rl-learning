@@ -8,7 +8,7 @@
 
 请看下面一个例子，从起始点 $s_1$，哪个策略更好？
 
-![image-20260917164120268](F:\rl-learning\docs\chapters\02-贝尔曼公式\assets\001.png)
+![策略比较示例](assets/001.png)
 
 直观上来看：
 
@@ -20,7 +20,7 @@
 
 ### 2.1.2 如何计算 return？
 
-![image-20260917183410306](F:\rl-learning\docs\chapters\02-贝尔曼公式\assets\002.png)
+![回报计算示例](assets/002.png)
 
 我们通常使用 $v_i$ 来表示从 $s_i$ 出发所得到的 return
 
@@ -96,7 +96,7 @@ $$
 
 考虑下面一个例子，写出 returns 之间的关系
 
-![image-20260917191034829](F:\rl-learning\docs\chapters\02-贝尔曼公式\assets\003.md)
+![练习示例](assets/003.png)
 
 **Answer**
 $$
