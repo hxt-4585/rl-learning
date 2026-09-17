@@ -52,8 +52,7 @@ v_2\\
 v_3\\
 v_4
 \end{bmatrix}
-}_{\mathbf v}
-=
+}_{\mathbf v} =
 \underbrace{
 \begin{bmatrix}
 r_1\\
