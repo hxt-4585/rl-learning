@@ -32,9 +32,9 @@ $$
 
 
 
-<img src="chapters/04-值迭代与策略迭代/assets/001.png" alt="image-20260919204415819" style="zoom: 80%;" />
+![image-20260919204415819](assets/001.png ':size=80%')
 
-<span style="color: red">**问题：$v_k$ 是否是某个策略的状态价值函数？（这个问题与4.2章节的序章的第三个问题相关）**</span>
+<span style="color: red">问题：$v_k$ 是否是某个策略的状态价值函数？（这个问题与4.2章节的序章的第三个问题相关）</span>
 
 <span style="color: blue">不一定。因为无法保证 $v_k$ 满足对应策略的贝尔曼方程。</span>
 
@@ -658,7 +658,7 @@ $$
 
 重复执行策略评估和策略改进，直到策略不再发生变化。
 
-<img src="chapters/04-值迭代与策略迭代/assets/003.png" alt="image-20260919212621398" style="zoom:80%;" />
+![image-20260919212621398](assets/003.png ':size=80%')
 
 ### 4.2.2 策略评估
 
